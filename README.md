@@ -1,7 +1,8 @@
-# Real-time streaming of news from twiiter accounts of major sports journalists + players and teams data
-This project will mainly be used for those who would want to practice developing Data Engineering pipelines from streaming data.
+# Modern Data Stack for Women Football Data Warehouse
 
-During the transfer period, there are a lot of rumours about players, however it has been know that there are main twitter accounts to find correct information like Woj for NBA and Fabrizio for football. This project will stream tweets from major accounts and classify the tweets to different teams. It will also add more information about the teams and players such as the market value of the players.
+The goal of this project is to experiment on the different flavours of modern data stack. The objective is to understand the pros and cons of the different architecture, tools and methodologies. The data being used is the Women Football data. The final output will be a fully built stack that can be installed in the different cloud providers and can also run locally.
+
+Any AI in the future.... We will see.
 
 
 
