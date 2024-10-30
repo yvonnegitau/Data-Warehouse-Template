@@ -2,7 +2,6 @@ site_name: Women Football Data Platform
 theme:
   name: material
   palette:
-
     # Palette toggle for light mode
     - primary: deep purple
       toggle:
@@ -17,5 +16,3 @@ theme:
   features:
     - navigation.tabs
     - navigation.tabs.sticky
-    - navigation.sections
-    - navigation.expand
