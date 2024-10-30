@@ -1,4 +1,10 @@
 site_name: Women Football Data Platform
+site_url: https://yvonnegitau.github.io/women-football-data-warehouse/
+docs_dir: docs/
+
+repo_name: 'yvonnegitau/women-football-data-warehouse'
+repo_url: 'https://github.com/yvonnegitau/women-football-data-warehouse'
+
 theme:
   name: material
   palette:
