@@ -22,3 +22,11 @@ theme:
   features:
     - navigation.tabs
     - navigation.tabs.sticky
+nav:
+  - index.md
+  - storage.md
+  - extraction.md
+  - orchestration.md
+  - transformation_modelling.md
+  - catalog.md
+  - monitoring.md
