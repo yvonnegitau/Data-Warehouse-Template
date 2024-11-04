@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  minio:
+    image: minio/minio
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    networks:
+      - openstacknetwork
+    volumes:
+      - 'minio_data:/data'
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINI_ROOT_PASSWORD}
+      - MINIO_DEFAULT_BUCKETS=${MINIO_DEFAULT_BUCKETS}
+    command: server /data --console-address ":9001"
+
+networks:
+  openstacknetwork:
+    driver: bridge
+volumes:
+  minio_data:
+    driver: local
