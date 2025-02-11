@@ -16,9 +16,114 @@ services:
       - MINIO_DEFAULT_BUCKETS=${MINIO_DEFAULT_BUCKETS}
     command: server /data --console-address ":9001"
 
+  postgres:
+    image: postgres:15
+    container_name: postgresql
+    environment:
+      POSTGRES_USER: "postgres_user"
+      POSTGRES_PASSWORD: "postgres_password"
+      POSTGRES_DB: "postgres_db"
+    networks:
+      - openstacknetwork
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres_user -d postgres_db"]
+      interval: 10s
+      timeout: 8s
+      retries: 5
+  dagster_code:
+    build:
+      context: .
+      dockerfile: ./Extraction/Dagster/Dockerfile.code
+    container_name: dagster_code
+    image: dagster_code_image
+    restart: always
+    environment:
+      DAGSTER_POSTGRES_USER: ${DAGSTER_POSTGRES_USER}
+      DAGSTER_POSTGRES_PASSWORD: ${DAGSTER_POSTGRES_PASSWORD}
+      DAGSTER_POSTGRES_DB: ${DAGSTER_POSTGRES_DB}
+      DAGSTER_CURRENT_IMAGE: ${DAGSTER_CURRENT_IMAGE}
+    networks:
+      - openstacknetwork
+  dagster_webserver:
+    build:
+      context: .
+      dockerfile: ./Extraction/Dagster/Dockerfile.dagster
+    entrypoint:
+      - dagster-webserver
+      - -h
+      - "0.0.0.0"
+      - -p
+      - "3001"
+      - -w
+      - workspace.yaml
+    container_name: dagster_webserver
+    environment:
+      DAGSTER_POSTGRES_USER: ${DAGSTER_POSTGRES_USER}
+      DAGSTER_POSTGRES_PASSWORD: ${DAGSTER_POSTGRES_PASSWORD}
+      DAGSTER_POSTGRES_DB: ${DAGSTER_POSTGRES_DB}
+    volumes: # Make docker client accessible so we can terminate containers from the webserver
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/io_manager_storage:/tmp/io_manager_storage
+    networks:
+      - openstacknetwork
+    depends_on:
+      postgres:
+        condition: service_healthy
+      dagster_code:
+        condition: service_started
+  dagster_daemon:
+    build:
+      context: .
+      dockerfile: ./Extraction/Dagster/Dockerfile.dagster
+    entrypoint:
+      - dagster-daemon
+      - run
+    container_name: dagster_daemon
+    restart: on-failure
+    environment:
+      DAGSTER_POSTGRES_USER: ${DAGSTER_POSTGRES_USER}
+      DAGSTER_POSTGRES_PASSWORD: ${DAGSTER_POSTGRES_PASSWORD}
+      DAGSTER_POSTGRES_DB: ${DAGSTER_POSTGRES_DB}
+    volumes: # Make docker client accessible so we can launch containers using host docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/io_manager_storage:/tmp/io_manager_storage
+    networks:
+      - openstacknetwork
+    depends_on:
+      postgres:
+        condition: service_healthy
+      dagster_code:
+        condition: service_started
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./Extraction/Dagster/Dockerfile.nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    expose:
+      - "80"
+    environment:
+      FORWARD_HOST: dagster_webserver
+      FORWARD_PORT: 3001
+      BASIC_USERNAME: ${BASIC_USERNAME}
+      BASIC_PASSWORD: ${BASIC_PASSWORD}
+    networks:
+      - openstacknetwork
+    depends_on:
+      dagster_webserver:
+        condition: service_started
+      dagster_daemon:
+        condition: service_started
+      minio:
+        condition: service_started
+      postgres:
+        condition: service_healthy
 networks:
   openstacknetwork:
     driver: bridge
+    internal: true
 volumes:
   minio_data:
     driver: local
