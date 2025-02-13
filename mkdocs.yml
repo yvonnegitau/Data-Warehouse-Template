@@ -1,9 +1,9 @@
-site_name: Women Football Data Platform
-site_url: https://yvonnegitau.github.io/women-football-data-warehouse/
+site_name: Data Warehouse Template
+site_url: https://github.com/yvonnegitau/Data-Warehouse-Template
 docs_dir: docs/
 
-repo_name: 'yvonnegitau/women-football-data-warehouse'
-repo_url: 'https://github.com/yvonnegitau/women-football-data-warehouse'
+repo_name: 'yvonnegitau/Data-Warehouse-Template'
+repo_url: 'https://github.com/yvonnegitau/Data-Warehouse-Template'
 
 theme:
   name: material
