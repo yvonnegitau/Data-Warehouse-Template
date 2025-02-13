@@ -14,6 +14,13 @@ services:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINI_ROOT_PASSWORD}
       - MINIO_DEFAULT_BUCKETS=${MINIO_DEFAULT_BUCKETS}
+      - MINIO_PROMETHEUS_AUTH_TYPE=public
+      - MINIO_CACHE="on"
+      - MINIO_CACHE_DRIVES=/mnt/drive1,/mnt/drive2
+      - MINIO_CACHE_QUOTA=80 # 80% of the drive will be used for caching
+      - MINIO_CACHE_AFTER=1 # Object will be cached after the first request to it
+      - MINIO_CACHE_WATERMARK_LOW=70 # Least accessed objects will be erased after the cache disk reaches the 70% watermark
+      - MINIO_CACHE_WATERMARK_HIGH=90
     command: server /data --console-address ":9001"
 
   postgres:
@@ -120,10 +127,47 @@ services:
         condition: service_started
       postgres:
         condition: service_healthy
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./Monitoring/prometheus:/etc/prometheus
+      - prom_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - openstacknetwork
+    depends_on:
+      dagster_webserver:
+        condition: service_started
+      dagster_daemon:
+        condition: service_started
+      minio:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./Monitoring/grafana:/etc/grafana/provisioning
+    networks:
+      - openstacknetwork
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=grafana
+    depends_on:
+      prometheus:
+        condition: service_started
 networks:
   openstacknetwork:
     driver: bridge
-    internal: true
 volumes:
   minio_data:
+    driver: local
+  prom_data:
     driver: local
