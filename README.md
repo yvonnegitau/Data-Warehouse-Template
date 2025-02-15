@@ -1,5 +1,5 @@
-# Modern Data Stack for Women Football Data Warehouse
+# Modern Data Stack Template 
 
-The goal of this project is to experiment on the different flavours of modern data stack. The objective is to understand the pros and cons of the different architecture, tools and methodologies. The data being used is the Women Football data. The final output will be a fully built stack that can be installed in the different cloud providers and can also run locally.
+The goal of the project is to create a template for the Modern Data Warehouse. It will be built with scalability and flexibility at its core. We can experiment on different tools as they are released and also how they play with other tools. And the best thing will be having startup code that saves time during projects.
 
-Any AI in the future.... We will see.
+
