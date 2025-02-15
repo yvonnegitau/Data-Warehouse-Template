@@ -163,6 +163,36 @@ services:
     depends_on:
       prometheus:
         condition: service_started
+  clickhouse:
+    image: 'clickhouse/clickhouse-server:${CHVER:-latest}'
+    user: '101:101'
+    container_name: clickhouse
+    hostname: clickhouse
+    volumes:
+      - ./Analytics/clickhouse/clickhouse-server/:/etc/clickhouse-server/config.d/config.xml
+      - ./Analytics/clickhouse/clickhouse-server/:/etc/clickhouse-server/users.d/users.xml
+    ports:
+      - '8123:8123'
+      - '9002:9002'
+    depends_on:
+      - clickhouse-keeper
+    networks:
+      - openstacknetwork
+    environment:
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+
+  clickhouse-keeper:
+    image: 'clickhouse/clickhouse-keeper:${CHKVER:-latest-alpine}'
+    user: '101:101'
+    container_name: clickhouse-keeper
+    hostname: clickhouse-keeper
+    volumes:
+      - ${PWD}/Analytics/clickhouse/clickhouse-keeper:/etc/clickhouse-keeper
+    ports:
+      - '9181:9181'
+    networks:
+      - openstacknetwork
 networks:
   openstacknetwork:
     driver: bridge
