@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://github.com/yvonnegitau/Data-Warehouse-Template/</loc>
+         <lastmod>2025-02-15</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/yvonnegitau/Data-Warehouse-Template/catalog/</loc>
+         <lastmod>2025-02-15</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/yvonnegitau/Data-Warehouse-Template/extraction/</loc>
+         <lastmod>2025-02-15</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/yvonnegitau/Data-Warehouse-Template/monitoring/</loc>
+         <lastmod>2025-02-15</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/yvonnegitau/Data-Warehouse-Template/orchestration/</loc>
+         <lastmod>2025-02-15</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/yvonnegitau/Data-Warehouse-Template/storage/</loc>
+         <lastmod>2025-02-15</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/yvonnegitau/Data-Warehouse-Template/transformation_modelling/</loc>
+         <lastmod>2025-02-15</lastmod>
+    </url>
+</urlset>
